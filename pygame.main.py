@@ -93,6 +93,10 @@ while running:
     
 
     if gameover:
+        # 폭발
+        Exploding = pygame.image.load('explode.png')
+        Exploding = pygame.transform.scale(Exploding, (128, 128))
+        screen.blit(Exploding, (player.pos[0] - 32, player.pos[1] - 32))
         draw_text("GAME OVER", 100, (WIDTH/2 - 300, HEIGHT/2 - 50), (255,255,255))
         txt = f"Time: {score:.3f}, Bullets: {len(bullets)}"
         draw_text(txt, 32, (WIDTH/2 - 150, HEIGHT/2 + 50), (255, 255, 255))
