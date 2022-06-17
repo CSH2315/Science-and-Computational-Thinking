@@ -94,7 +94,7 @@ while running:
 
     if gameover:
         # 폭발
-        Exploding = pygame.image.load('explode.png')
+        Exploding = pygame.image.load('explode.jpg')
         Exploding = pygame.transform.scale(Exploding, (128, 128))
         screen.blit(Exploding, (player.pos[0] - 32, player.pos[1] - 32))
         draw_text("GAME OVER", 100, (WIDTH/2 - 300, HEIGHT/2 - 50), (255,255,255))
