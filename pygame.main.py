@@ -28,7 +28,8 @@ pygame.mixer.music.load('bgm.wav')
 pygame.mixer.music.play(-1)
 
 bg_image = pygame.image.load('bg.jpg')
-bg_pos_x = 0
+bg_pos = (0, 0)
+bg_goto = (0, 0)
 player = Player(WIDTH/2, HEIGHT/2)
 
 bullet1 = Bullet(0,0,0.5,0.5)
@@ -54,30 +55,45 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
+            # 배경화면이 방향키를 따라 이동하고, 플레이어가 같이 이동
             if event.key == pygame.K_LEFT:
+                bg_goto = (-1, 0)
                 player.goto(-1, 0)
             elif event.key == pygame.K_RIGHT:
+                bg_goto = (1, 0)
                 player.goto(1, 0)
             elif event.key == pygame.K_UP:
+                bg_goto = (0, -1)
                 player.goto(0, -1)
             elif event.key == pygame.K_DOWN:
+                bg_goto = (0, 1)
                 player.goto(0, 1)
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
+                bg_goto = (1, 0)
                 player.goto(1, 0)
+                # KEYUP 상태에서 계속 화면이 움직이는 것을 방지
+                bg_goto = (0, 0)
             elif event.key == pygame.K_RIGHT:
+                bg_goto = (-1, 0)
                 player.goto(-1, 0)
+                bg_goto = (0, 0)
             elif event.key == pygame.K_UP:
+                bg_goto = (0, 1)
                 player.goto(0, 1)
+                bg_goto = (0, 0)
             elif event.key == pygame.K_DOWN:
+                bg_goto = (0, -1)
                 player.goto(0, -1)
+                bg_goto = (0, 0)
+            
 
     player.update(dt, screen)
 
     #화면 갱신
     # screen.fill((0, 0, 0)) # 검정색
-    bg_pos_x -= dt * 0.01
-    screen.blit(bg_image, (bg_pos_x,0))
+    bg_pos = (bg_pos[0] + bg_goto[0] * 0.01 * dt, bg_pos[1] + bg_goto[1] * 0.01 * dt)
+    screen.blit(bg_image, bg_pos)
     player.draw(screen)
     bullet1.update_and_draw(dt, screen)
     for b in bullets:
@@ -96,7 +112,7 @@ while running:
         # 폭발
         Exploding = pygame.image.load('explode.jpg')
         Exploding = pygame.transform.scale(Exploding, (128, 128))
-        screen.blit(Exploding, (player.pos[0] - 32, player.pos[1] - 32))
+        screen.blit(Exploding, (player.pos[0] - 64, player.pos[1] - 64))
         draw_text("GAME OVER", 100, (WIDTH/2 - 300, HEIGHT/2 - 50), (255,255,255))
         txt = f"Time: {score:.3f}, Bullets: {len(bullets)}"
         draw_text(txt, 32, (WIDTH/2 - 150, HEIGHT/2 + 50), (255, 255, 255))
