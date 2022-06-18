@@ -55,36 +55,36 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            # 배경화면이 방향키를 따라 이동하고, 플레이어가 같이 이동
+            # 플레이어가 이동하면 배경화면도 같이 이동(배경이 유지되도록 플레이어와 반대로 이동)
             if event.key == pygame.K_LEFT:
-                bg_goto = (-1, 0)
                 player.goto(-1, 0)
-            elif event.key == pygame.K_RIGHT:
                 bg_goto = (1, 0)
+            elif event.key == pygame.K_RIGHT:
                 player.goto(1, 0)
+                bg_goto = (-1, 0)
             elif event.key == pygame.K_UP:
-                bg_goto = (0, -1)
                 player.goto(0, -1)
-            elif event.key == pygame.K_DOWN:
                 bg_goto = (0, 1)
+            elif event.key == pygame.K_DOWN:
                 player.goto(0, 1)
+                bg_goto = (0, -1)
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
-                bg_goto = (1, 0)
                 player.goto(1, 0)
+                bg_goto = (-1, 0)
                 # KEYUP 상태에서 계속 화면이 움직이는 것을 방지
                 bg_goto = (0, 0)
             elif event.key == pygame.K_RIGHT:
-                bg_goto = (-1, 0)
                 player.goto(-1, 0)
+                bg_goto = (1, 0)
                 bg_goto = (0, 0)
             elif event.key == pygame.K_UP:
-                bg_goto = (0, 1)
                 player.goto(0, 1)
+                bg_goto = (0, -1)
                 bg_goto = (0, 0)
             elif event.key == pygame.K_DOWN:
-                bg_goto = (0, -1)
                 player.goto(0, -1)
+                bg_goto = (0, 1)
                 bg_goto = (0, 0)
             
 
