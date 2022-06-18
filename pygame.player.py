@@ -11,6 +11,16 @@ class Player:
     def goto(self, x, y):
         self.to[0] += x
         self.to[1] += y
+        if x < 0:
+            # 화면 외부가 보이지 않도록
+            x = 800
+        elif x > 800:
+            x = 0
+        if y < 0:
+            # 화면 외부가 보이지 않도록
+            y = 600
+        elif y > 600:
+            y = 0
 
     def update(self, dt, screen):
         width, height = screen.get_size();
