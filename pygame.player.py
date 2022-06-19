@@ -70,19 +70,21 @@ class Player:
 
     def hit(self):
         # 무적상태가 아니라면?
-        # 오류 없애기 위해 0.1초 정지
-        # 맞으면 폭발
-        time.sleep(0.1)
-        self.show_attacked = True
-        self.show_attacked_during = 500
-        # 맞으면 폭발음
-        self.channel.play(self.sound)
-        # 무적상태 돌입
-        self.invincibility = True
-        self.invincibility_during = 3000
-        # 맞으면 hp 깎임
-        self.hp -= 10
-        return bool(self.hp <= 0)
+        if not self.invincibility:
+            # 오류 없애기 위해 0.1초 정지
+            # 맞으면 폭발
+            time.sleep(0.1)
+            self.show_attacked = True
+            self.show_attacked_during = 300
+            # 맞으면 폭발음
+            self.channel.play(self.sound)
+            # 무적상태 돌입
+            self.invincibility = True
+            self.invincibility_during = 1000
+            # 맞으면 hp 깎임
+            self.hp -= 10
+        if self.hp <= 0:
+            return True # hp가 0이면 gameover = True로 하기 위함
 
 
     def draw(self, screen):
@@ -96,11 +98,22 @@ class Player:
         elif self.to == [1, -1]: self.angle = 315
         elif self.to == [0, -1]: self.angle = 0
 
+        rotated = None
+        calib_pos = [0, 0]
+
         if self.show_attacked:
             rotated = pygame.transform.rotate(self.attacked_image, self.angle)
             calib_pos = (self.pos[0] - rotated.get_width()/2, self.pos[1] - rotated.get_height()/2)
             screen.blit(rotated, calib_pos)
         else:
             rotated = pygame.transform.rotate(self.image, self.angle)
-            calib_pos = (self.pos[0] - rotated.get_width()/2, self.pos[1] - rotated.get_height()/2)
+
+        calib_pos = (self.pos[0] - rotated.get_width()/2, self.pos[1] - rotated.get_height()/2)
+        
+
+        # 무적이면 깜빡인다.
+        if self.invincibility:
+            if self.invincibility_during // 100 % 2 == 0:
+                screen.blit(rotated, calib_pos)
+        else:
             screen.blit(rotated, calib_pos)
