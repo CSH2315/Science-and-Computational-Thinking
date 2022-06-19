@@ -1,12 +1,32 @@
 import pygame
+# hp가 10씩 줄어야 하는데 그 이상 줄거나 바로 gameover되는 경우 발생 -> 시간지연 위해 import
+import time
 
 class Player:
-    def __init__(self, x, y):
+    # 폭발할 때 효과음도 player에서 표현
+    def __init__(self, x, y, mixer):
         self.image = pygame.image.load('player.png')
         self.image = pygame.transform.scale(self.image, (64, 64))
+        self.attacked_image = pygame.image.load('explode.png')
+        self.attacked_image = pygame.transform.scale(self.attacked_image, (128, 128))
+        self.show_attacked = False
+        self.show_attacked_during = 0
         self.pos = [x, y]
         self.to = [0, 0]
         self.angle = 0
+        # 플레이어 소리 도입
+        self.channel = mixer.Channel(1)
+        # 총알에 맞으면 폭발음이 들린다.
+        self.sound = mixer.Sound('explosion.wav')
+        # 플레이어 생명력 도입
+        self.hp = 50
+        # 플레이어 무적상태 도입
+        self.invincibility = False
+        self.invincibility_during = 0
+
+    def get_hp(self):
+        # 플레이어의 생명력 상태를 표시
+        return self.hp
 
     def goto(self, x, y):
         self.to[0] += x
@@ -38,6 +58,31 @@ class Player:
         #    self.pos[1] = player_half_height
         #if self.pos[1] > height - player_half_height:
         #    self.pos[1] = height - player_half_height
+        # 총알 맞았을 때 효과 지속시간
+        self.show_attacked_during -= dt
+        if self.show_attacked_during < 0:
+            self.show_attacked = False
+
+        # 무적 효과 지속시간
+        self.invincibility_during -= dt
+        if self.invincibility_during < 0:
+            self.invincibility = False
+
+    def hit(self):
+        # 무적상태가 아니라면?
+        # 오류 없애기 위해 0.1초 정지
+        # 맞으면 폭발
+        time.sleep(0.1)
+        self.show_attacked = True
+        self.show_attacked_during = 500
+        # 맞으면 폭발음
+        self.channel.play(self.sound)
+        # 무적상태 돌입
+        self.invincibility = True
+        self.invincibility_during = 3000
+        # 맞으면 hp 깎임
+        self.hp -= 10
+        return bool(self.hp <= 0)
 
 
     def draw(self, screen):
@@ -51,9 +96,11 @@ class Player:
         elif self.to == [1, -1]: self.angle = 315
         elif self.to == [0, -1]: self.angle = 0
 
-        rotated = pygame.transform.rotate(self.image, self.angle)
-
-        calib_pos = (self.pos[0] - rotated.get_width()/2, self.pos[1] - rotated.get_height()/2)
-
-
-        screen.blit(rotated, calib_pos)
+        if self.show_attacked:
+            rotated = pygame.transform.rotate(self.attacked_image, self.angle)
+            calib_pos = (self.pos[0] - rotated.get_width()/2, self.pos[1] - rotated.get_height()/2)
+            screen.blit(rotated, calib_pos)
+        else:
+            rotated = pygame.transform.rotate(self.image, self.angle)
+            calib_pos = (self.pos[0] - rotated.get_width()/2, self.pos[1] - rotated.get_height()/2)
+            screen.blit(rotated, calib_pos)
