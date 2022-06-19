@@ -156,4 +156,3 @@ while running:
         if time_for_adding_bullets > 1000:
             bullets.append(Bullet(0, rnd.random()*HEIGHT, rnd.random()-0.5, rnd.random()-0.5))
             time_for_adding_bullets -= 1000
-
