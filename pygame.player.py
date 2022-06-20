@@ -68,7 +68,7 @@ class Player:
         if self.invincibility_during < 0:
             self.invincibility = False
 
-    def hit(self):
+    def hit(self, damage):
         # 무적상태가 아니라면?
         if not self.invincibility:
             # 오류 없애기 위해 0.1초 정지
@@ -82,7 +82,8 @@ class Player:
             self.invincibility = True
             self.invincibility_during = 1000
             # 맞으면 hp 깎임
-            self.hp -= 10
+            # main으로 가져가서 사용하므로 여기서 bullets의 Bullet 클래스를 import 하지 않음
+            self.hp -= damage
         if self.hp <= 0:
             return True # hp가 0이면 gameover = True로 하기 위함
 
