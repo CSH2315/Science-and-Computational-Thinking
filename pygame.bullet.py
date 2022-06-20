@@ -1,14 +1,12 @@
-import pygame
-
-class Bullet:
-    def __init__(self, x, y, to_x, to_y):
-        self.pos = [x, y]
-        self.to = [to_x, to_y]
-        self.radius = 7
-        self.color = (190, 0, 0)
-
-    def update_and_draw(self, dt, screen):
-        width, height = screen.get_size()
-        self.pos[0] = (self.pos[0] + self.to[0] * dt) % width
-        self.pos[1] = (self.pos[1] + self.to[1] * dt) % height
-        pygame.draw.circle(screen, self.color, self.pos, self.radius)
+from bullets import IronBead
+from bullets import NormalBullet
+from bullets import Canonball
+from random import randint
+def Bullet(x, y, to_x, to_y):
+    rnd = randint(1, 100)
+    if rnd % 3 == 1:
+        return NormalBullet(x, y, to_x, to_y)
+    elif rnd % 3 == 2:
+        return IronBead(x, y, to_x, to_y)
+    elif rnd % 3 == 0:
+        return Canonball(x, y, to_x, to_y)
