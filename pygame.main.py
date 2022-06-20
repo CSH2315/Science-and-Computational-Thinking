@@ -1,6 +1,6 @@
 import pygame
 import time
-# 리스트 
+# 리스트 저장
 import pickle
 from player import Player
 from bullet import Bullet
@@ -151,8 +151,15 @@ while running:
     if gameover:
         '''screen.blit(Exploding, (player.pos[0] - 64, player.pos[1] - 64))'''
         draw_text("GAME OVER", 100, (WIDTH/2 - 300, HEIGHT/2 - 50), (255,255,255))
-        txt = f"Time: {score:.3f}, Bullets: {len(bullets)}"
-        draw_text(txt, 32, (WIDTH/2 - 150, HEIGHT/2 + 50), (255, 255, 255))
+        # txt = f"Time: {score:.3f}, Bullets: {len(bullets)}"
+        # 이제 점수를 파일에서 가져온다.
+        txt = f"score: {s}"
+        for i in range(min(len(scores), 10)):
+            if s in scores:
+                # 텍스트 크기와 색 다르게 하여 강조
+                draw_text(txt, 48, (WIDTH/2 - 307, HEIGHT/2 + 50), (196, 144, 44))
+            else:
+                draw_text(txt, 32, (WIDTH/2 - 210, HEIGHT/2 + 50), (255, 255, 255))
 
     else:
         score = time.time() - start_time
@@ -168,7 +175,8 @@ while running:
                 if player.hit(b.get_damage()):
                     gameover = True
                     # scores에 점수 기록
-                    scores.append(float(score))
+                    s = float(score)
+                    scores.append(s)
                     scores.sort()
                     # 리스트 요소 개수가 10개를 넘기면 가장 앞 것을 자른다.
                     if len(scores) > 10:
@@ -177,8 +185,6 @@ while running:
                         pass
                     with open('highscores.txt', 'wb') as f:
                         pickle.dump(scores, f)
-
-                    print(scores)
                     
             
         if time_for_adding_bullets > 1000:
