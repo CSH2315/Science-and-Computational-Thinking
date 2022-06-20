@@ -68,6 +68,8 @@ time_for_adding_bullets = 0
 start_time = time.time()
 
 score = 0
+# 추가: 최초 실행 시 최고기록은 0점
+bs = scores[9]
 
 gameover = False
 running = True
@@ -155,15 +157,21 @@ while running:
         # 이제 점수를 파일에서 가져온다.
         txt = f"score: {s}"
         for i in range(min(len(scores), 10)):
-            if s in scores:
+            if s == float(scores[9]):
+                draw_text(txt, 48, (WIDTH/2 - 307, HEIGHT/2 + 50), (196, 156, 72))
+            elif s == float(scores[8]):
+                draw_text(txt, 48, (WIDTH/2 - 307, HEIGHT/2 + 50), (192, 192, 192))
+            elif s == float(scores[7]):
+                draw_text(txt, 48, (WIDTH/2 - 307, HEIGHT/2 + 50), (191, 137, 112))
+            elif s in scores:
                 # 텍스트 크기와 색 다르게 하여 강조
-                draw_text(txt, 48, (WIDTH/2 - 307, HEIGHT/2 + 50), (196, 144, 44))
+                draw_text(txt, 48, (WIDTH/2 - 307, HEIGHT/2 + 50), (64, 224, 208))
             else:
                 draw_text(txt, 32, (WIDTH/2 - 210, HEIGHT/2 + 50), (255, 255, 255))
 
     else:
         score = time.time() - start_time
-        txt = f"Time: {score:.3f}, Bullets: {len(bullets)}, HP = {player.get_hp()}"
+        txt = f"Time: {score:.3f}, Bullets: {len(bullets)}, HP = {player.get_hp()}, Best = {bs:.3f}"
         draw_text(txt, 32, (10, 10), (255, 255, 255))
 
     pygame.display.update()
@@ -183,8 +191,12 @@ while running:
                         scores.pop(0)
                     else:
                         pass
+                    # 추가; 최고기록
+                    bs = float(scores[9])
                     with open('highscores.txt', 'wb') as f:
                         pickle.dump(scores, f)
+
+                    print(scores)
                     
             
         if time_for_adding_bullets > 1000:
