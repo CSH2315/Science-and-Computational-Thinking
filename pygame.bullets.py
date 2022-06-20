@@ -41,5 +41,5 @@ class Killer(Bullet):
     def __init__(self, x, y, to_x, to_y):
         super().__init__(x, y, to_x, to_y)
         self._radius = 16
-        self._color = (196, 144, 44)
+        self._color = (64, 44, 196)
         self._damage = 44444444
