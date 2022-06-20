@@ -153,7 +153,8 @@ while running:
     if not gameover:
         for b in bullets:
             if collision(b, player):
-                if player.hit():
+                # 데미지를 가져와 hp 차감
+                if player.hit(b.get_damage()):
                     gameover = True
             
         if time_for_adding_bullets > 1000:
