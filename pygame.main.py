@@ -1,5 +1,6 @@
 import pygame
 import time
+# 리스트 
 import pickle
 from player import Player
 from bullet import Bullet
