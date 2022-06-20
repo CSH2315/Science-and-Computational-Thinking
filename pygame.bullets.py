@@ -6,6 +6,11 @@ class Bullet:
         self._to = [to_x, to_y]
         self._radius = 7
         self._color = (34, 144, 34)
+        # 데미지 도입
+        self._damage = 8
+
+    def get_damage(self):
+        return self._damage
 
     def update_and_draw(self, dt, screen):
         width, height = screen.get_size()
@@ -19,6 +24,7 @@ class IronBead(Bullet):
         super().__init__(x, y, to_x, to_y)
         self._radius = 5
         self._color = (190, 0, 0)
+        self._damage = 4
 
 class NormalBullet(Bullet):
     def __init__(self, x, y, to_x, to_y):
@@ -29,3 +35,11 @@ class Canonball(Bullet):
         super().__init__(x, y, to_x, to_y)
         self._radius = 10
         self._color = (201, 228, 225)
+        self._damage = 16
+
+class Killer(Bullet):
+    def __init__(self, x, y, to_x, to_y):
+        super().__init__(x, y, to_x, to_y)
+        self._radius = 16
+        self._color = (196, 144, 44)
+        self._damage = 44444444
