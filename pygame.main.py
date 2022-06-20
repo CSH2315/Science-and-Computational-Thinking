@@ -1,5 +1,6 @@
 import pygame
 import time
+import pickle
 from player import Player
 from bullet import Bullet
 import random as rnd
@@ -12,6 +13,15 @@ def draw_text(txt, size, pos, color):
     font = pygame.font.Font('freesansbold.ttf', size)
     r = font.render(txt, True, color)
     screen.blit(r, pos)
+
+# 점수를 기록할 리스트 추가
+scores = []
+# 파일 열어 읽기
+try:
+    with open ('highscores.txt', 'rb') as f:
+        scores = pickle.load(f)
+except:
+    print("score file not found")
 
 pygame.init()
 WIDTH, HEIGHT = 800, 600
@@ -156,6 +166,19 @@ while running:
                 # 데미지를 가져와 hp 차감
                 if player.hit(b.get_damage()):
                     gameover = True
+                    # scores에 점수 기록
+                    scores.append(float(score))
+                    scores.sort()
+                    # 리스트 요소 개수가 10개를 넘기면 가장 앞 것을 자른다.
+                    if len(scores) > 10:
+                        scores.pop(0)
+                    else:
+                        pass
+                    with open('highscores.txt', 'wb') as f:
+                        pickle.dump(scores, f)
+
+                    print(scores)
+                    
             
         if time_for_adding_bullets > 1000:
             bullets.append(Bullet(0, rnd.random()*HEIGHT, rnd.random()-0.5, rnd.random()-0.5))
