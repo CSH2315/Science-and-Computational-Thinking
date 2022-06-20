@@ -5,7 +5,7 @@ from bullet import Bullet
 import random as rnd
 
 def collision(obj1, obj2):
-    dist = ((obj1.pos[0] - obj2.pos[0]) ** 2 + (obj1.pos[1] - obj2.pos[1]) ** 2) ** 0.5
+    dist = ((obj1._pos[0] - obj2.pos[0]) ** 2 + (obj1._pos[1] - obj2.pos[1]) ** 2) ** 0.5
     return dist < 20
 
 def draw_text(txt, size, pos, color):
@@ -26,11 +26,12 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # 충돌 횟수 세기
-collisioncount = 0
+# collisioncount = 0
 
 
 bg_image = pygame.image.load('bg.jpg')
-bg_pos = (0, 0)
+# 배경화면의 가운데에 오도록 조정
+bg_pos = (-400, -300)
 bg_goto = (0, 0)
 # player.py에 mixer 도입했음
 player = Player(WIDTH/2, HEIGHT/2, pygame.mixer)
@@ -45,7 +46,8 @@ pygame.mixer.music.load('bgm.wav')
 pygame.mixer.music.play(-1)
 '''
 
-bullet1 = Bullet(0,0,0.5,0.5)
+# 더 이상 bullet을 따로 지정해줄 필요 없음
+# bullet1 = Bullet(0,0,0.5,0.5)
 bullets = []
 for i in range(1):
     bullets.append(Bullet(0, rnd.random()*HEIGHT, rnd.random()-0.5, rnd.random()-0.5))
@@ -108,7 +110,7 @@ while running:
     bg_pos = (bg_pos[0] + bg_goto[0] * 0.01 * dt, bg_pos[1] + bg_goto[1] * 0.01 * dt)
     screen.blit(bg_image, bg_pos)
     player.draw(screen)
-    bullet1.update_and_draw(dt, screen)
+    '''bullet1.update_and_draw(dt, screen)'''
     for b in bullets:
         b.update_and_draw(dt, screen)
 
@@ -140,6 +142,7 @@ while running:
         draw_text("GAME OVER", 100, (WIDTH/2 - 300, HEIGHT/2 - 50), (255,255,255))
         txt = f"Time: {score:.3f}, Bullets: {len(bullets)}"
         draw_text(txt, 32, (WIDTH/2 - 150, HEIGHT/2 + 50), (255, 255, 255))
+
     else:
         score = time.time() - start_time
         txt = f"Time: {score:.3f}, Bullets: {len(bullets)}, HP = {player.get_hp()}"
